@@ -6,7 +6,10 @@ RUN apt-get update && apt-get install -y \
   binutils \
   gdal-bin \
   libproj-dev \
-  python-gdal
+  python-gdal \
+  libxml2-dev \
+  libxslt1-dev \
+  python-dev
 ADD requirements.txt /code/
 RUN pip install -r requirements.txt
 ADD . /code/
