@@ -60,6 +60,18 @@ def get_stops(request):
     return render(request,'osm/stops.html')
 
 def get_route_master_relations(request):
+
+    try:
+        from django.templatetags.static import static
+        
+        xmlfile = '/static/data.xml'
+
+        with open(xmlfile) as fileobj:
+            osmfile = fileobj.read()
+
+    except Exception:
+        print("No XML File found try another one")
+
     route_master_key   = KeyValueString.objects.get(value='type')
     route_master_value = KeyValueString.objects.get(value='route_master')
     route_master_tag    = Tag.objects.get(key=route_master_key, value=route_master_value)
@@ -84,6 +96,7 @@ def get_route_master_relations(request):
     return render(request, 'osm/route_masters.html')
 
 def get_route_relations(request):
+
     route_key   = KeyValueString.objects.get(value='type')
     route_value = KeyValueString.objects.get(value='route')
     route_tag    = Tag.objects.get(key=route_key, value=route_value)
@@ -108,7 +121,19 @@ def get_route_relations(request):
     return render(request, 'osm/routes.html')
 
 def load(request):
-    osmFile = './osm/data.xml/'
+    osmFile = '''
+        <?xml version='1.0' encoding='UTF-8'?>
+    <osm version='0.6' generator='JOSM'>
+      <node id='313586' timestamp='2018-01-15T17:26:05Z' uid='72151' user='GeorgFausB' version='13' changeset='55469382' lat='50.9558026' lon='6.9691347'>
+        <tag k='TMC:cid_58:tabcd_1:Class' v='Point' />
+        <tag k='TMC:cid_58:tabcd_1:Direction' v='positive' />
+        <tag k='TMC:cid_58:tabcd_1:LCLversion' v='9.00' />
+        <tag k='TMC:cid_58:tabcd_1:LocationCode' v='39623' />
+        <tag k='TMC:cid_58:tabcd_1:NextLocationCode' v='39624' />
+        <tag k='TMC:cid_58:tabcd_1:PrevLocationCode' v='39622' />
+      </node>
+    </osm>
+    '''
     root = etree.fromstring(osmFile)
 
     for primitive in root.getchildren():
