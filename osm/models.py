@@ -115,6 +115,18 @@ class Way(OSM_Primitive):
             wn.save()
         return wn
 
+    def add_nodes_geom(self):
+        way_nodes = self.nodes.all()
+
+        nodes = []
+
+        for way_node in way_nodes:
+            single_node_geom = list(way_node.geom)
+            nodes.append(single_node_geom)
+
+        self.geom = LineString(nodes)
+        self.save()
+
 class WN(models.Model):
     node     =  models.ForeignKey('Node',on_delete=models.CASCADE)
     way      =  models.ForeignKey('Way',on_delete=models.CASCADE)
