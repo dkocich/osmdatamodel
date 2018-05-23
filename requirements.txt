@@ -2,4 +2,10 @@
  psycopg2
  django-geojson==2.11.0
  django-leaflet
- djgeojson
+ django-geojson==2.11.0
+ lxml
+ ordered_set
+ flup6
+ requests
+ urllib3
+ overpy

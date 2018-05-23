@@ -4,7 +4,12 @@ from lxml import etree
 from decimal import Decimal
 from django.contrib.gis.geos import Point
 from ordered_set import OrderedSet
+<<<<<<< HEAD
 from xml.dom import minidom
+=======
+#from xml.dom import minidom
+
+>>>>>>> 92b7a4af1bec6aaf2e25b1e9932fc832d4866da9
 def home(request):
     return render(request, 'osm/home.html')
 
