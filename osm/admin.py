@@ -6,13 +6,11 @@ class TagAdmin(admin.ModelAdmin):
 	display = ('tag.id')
 class KeyValueStringAdmin(admin.ModelAdmin):
 	display =('value')
-class WayAdmin(admin.ModelAdmin):
-	list_display =('id','user')
 class RelationAdmin(admin.ModelAdmin):
 	list_display = ('id','user')
 
 admin.site.register(Tag,TagAdmin)
 admin.site.register(Node,LeafletGeoAdmin)
+admin.site.register(Way, LeafletGeoAdmin)
 admin.site.register(KeyValueString,KeyValueStringAdmin)
-admin.site.register(Way,WayAdmin)
 admin.site.register(OSM_Relation,RelationAdmin)

@@ -93,17 +93,21 @@
         <a class="btn btn-primary" href="#">Get route relations</a>
         </div>
 
-        <div class="col-xs-9">
+         <div class="col-xs-9">
         {% leaflet_map "osmmap" callback="loadmapfunction"%}
         </div>
 
     </div>
 
     <script type="text/javascript">
-        var nodedata = '{% url "data" %}';
+        var nodedata = '{% url "nodedata" %}';
+        var waydata  = '{% url "waydata" %}';
         function loadmapfunction(map, options){
+            $.getJSON(waydata, function(data){
+                L.geoJson(data).addTo(map);
+            })
             $.getJSON(nodedata, function(data){
-              L.geoJson(data).addTo(map);
+                L.geoJson(data).addTo(map);
             })
         }
     </script>

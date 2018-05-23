@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.gis.db import models
-from django.contrib.gis.db.models import PointField
-from django.contrib.gis.geos import Point
+from django.contrib.gis.db.models import PointField,LineStringField
+from django.contrib.gis.geos import Point,LineString
 from django.db.models import Manager as GeoManager
 
 class KeyValueString(models.Model):
@@ -91,6 +91,9 @@ class Node(OSM_Primitive):
 class Way(OSM_Primitive):
 
     nodes = models.ManyToManyField('Node', through='WN',  related_name="nodes_in_way")
+    geom  = models.LineStringField(blank=True, null=True)
+
+    objects = GeoManager()
 
     def add_node(self, node):
         count = self.wn_set.count()

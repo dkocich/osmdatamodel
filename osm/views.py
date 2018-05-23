@@ -4,13 +4,24 @@ from lxml import etree
 from decimal import Decimal
 from django.contrib.gis.geos import Point
 from ordered_set import OrderedSet
-<<<<<<< HEAD
-from xml.dom import minidom
-=======
-#from xml.dom import minidom
+from django.contrib.gis.geos import Point,LineString
 
->>>>>>> 92b7a4af1bec6aaf2e25b1e9932fc832d4866da9
 def home(request):
+
+    #whenever load map the ways should have the nodes 
+    ways = Way.objects.all()
+
+    for way in ways:
+        way_nodes = way.nodes.all()
+        nodes = []
+        for way_node in way_nodes:
+            single_node_geom = list(way_node.geom)
+            nodes.append(single_node_geom)
+        
+        print(nodes)
+        way.geom = LineString(nodes)
+        way.save()
+
     return render(request, 'osm/home.html')
 
 def get_stops(request):
