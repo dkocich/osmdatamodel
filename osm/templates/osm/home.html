@@ -1,5 +1,7 @@
 {% load staticfiles %}
 {% load static %}
+{% load leaflet_tags %}
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,6 +21,10 @@
         <link rel="stylesheet" href="https://openlayers.org/en/v4.6.4/css/ol.css" type="text/css">
         <script src="https://openlayers.org/en/v4.6.4/build/ol.js"></script>
         <script src="{% static 'js/app.js' %}"></script>
+
+        {% leaflet_css %}
+        {% leaflet_js %}
+
 
         <style type="text/css">
             html ,body {
@@ -41,7 +47,14 @@
                 padding-top:15px;
                 font-size: 20px;
             }
-        </style>
+            .leaflet-container { 
+                width:  900px;
+                height: 550px;
+            }
+            #specialbigmap {
+                height: 800px;
+            }
+       </style>
     </head>
     <body>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -64,13 +77,21 @@
     </div>
     <br><br><br><br>
 
-    <a class="btn btn-primary" href="osm/">Load Openstreetmap Data </a>
-    <br><br>
-    <a class="btn btn-primary" href="stops/">Get Stops </a>
-    <br><br>
-    <a class="btn btn-primary" href="route_masters/">Get route_master relations</a>
-    <br><br>
-    <a class="btn btn-primary" href="#">Get route relations</a>
+    <div class="container">
+        <div class="col-xs-3">
+        <a class="btn btn-primary" href="osm/">Load Openstreetmap Data </a>
+        <br><br>
+        <a class="btn btn-primary" href="stops/">Get Stops </a>
+        <br><br>
+        <a class="btn btn-primary" href="route_masters/">Get route_master relations</a>
+        <br><br>
+        <a class="btn btn-primary" href="#">Get route relations</a>
+        </div>
+
+        <div class="col-xs-9">
+        {% leaflet_map "mymapp"%}
+        </div>
+    </div>
 
     <div class="container">
     {% block main%}

@@ -1,6 +1,17 @@
 {% load staticfiles %}
 {% load static %}
+{% load leaflet_tags %}
+
 <!DOCTYPE html>
 <html>
+<head>
+	{% leaflet_css %}
+	{% leaflet_js %}
+</head>
+
+<body>
+	{% leaflet_map "mymap" %}
+</body>
+
 <h1>Loaded</h1>
 </html>

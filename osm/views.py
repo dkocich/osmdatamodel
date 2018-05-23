@@ -57,20 +57,9 @@ def get_stops(request):
     print(OrderedSet(bus_nodes))
     print(OrderedSet(tram_nodes))
 
-    return render(request,'osm/stops.html')
+    return render(request,'osm/home.html')
 
 def get_route_master_relations(request):
-
-    try:
-        from django.templatetags.static import static
-        
-        xmlfile = '/static/data.xml'
-
-        with open(xmlfile) as fileobj:
-            osmfile = fileobj.read()
-
-    except Exception:
-        print("No XML File found try another one")
 
     route_master_key   = KeyValueString.objects.get(value='type')
     route_master_value = KeyValueString.objects.get(value='route_master')
@@ -93,7 +82,7 @@ def get_route_master_relations(request):
     print(OrderedSet(bus_route_master))
     print(OrderedSet(rail_route_master))
 
-    return render(request, 'osm/route_masters.html')
+    return render(request, 'osm/home.html')
 
 def get_route_relations(request):
 
@@ -118,11 +107,10 @@ def get_route_relations(request):
     print(OrderedSet(bus_route))
     print(OrderedSet(rail_route))
 
-    return render(request, 'osm/routes.html')
+    return render(request, 'osm/home.html')
 
 def load(request):
     osmFile = '''
-        <?xml version='1.0' encoding='UTF-8'?>
     <osm version='0.6' generator='JOSM'>
       <node id='313586' timestamp='2018-01-15T17:26:05Z' uid='72151' user='GeorgFausB' version='13' changeset='55469382' lat='50.9558026' lon='6.9691347'>
         <tag k='TMC:cid_58:tabcd_1:Class' v='Point' />
@@ -131,8 +119,27 @@ def load(request):
         <tag k='TMC:cid_58:tabcd_1:LocationCode' v='39623' />
         <tag k='TMC:cid_58:tabcd_1:NextLocationCode' v='39624' />
         <tag k='TMC:cid_58:tabcd_1:PrevLocationCode' v='39622' />
+        <tag k='test-tag' v='testvalue' />
       </node>
-    </osm>
+      <node id='23423432' timestamp='2017-01-15T17:26:05Z' uid='51' user='FausB' version='1' changeset='469382' lat='50.9558026' lon='6.9691347'>
+      <tag k='test-tag' v='testvalue' />
+      </node>
+      <way id='25250108' timestamp='2016-03-28T13:24:52Z' uid='109062' user='Jojo4u' version='28' changeset='38120453'>
+        <nd ref='313586' />
+        <nd ref='23423432' />
+        <tag k='electrified' v='contact_line' />
+        <tag k='frequency' v='0' />
+        <tag k='gauge' v='1000;1435' />
+        <tag k='maxspeed' v='30' />
+        <tag k='network' v='VVS' />
+        <tag k='operator' v='Stuttgarter Straßenbahnen AG' />
+        <tag k='railway' v='light_rail' />
+        <tag k='railway:pzb' v='no' />
+        <tag k='voltage' v='750' />
+        <tag k='workrules' v='DE:BOStrab' />
+      </way>
+
+     </osm>
     '''
     root = etree.fromstring(osmFile)
 
