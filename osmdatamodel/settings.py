@@ -70,7 +70,7 @@ DATABASES = {
 
          'USER':'sriks',
 
-         'PASSWORD':'sriks@123',
+         'PASSWORD':'',
 
          'HOST':'localhost',
  },
