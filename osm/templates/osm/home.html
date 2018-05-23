@@ -1,6 +1,11 @@
 {% load staticfiles %}
 {% load static %}
 {% load leaflet_tags %}
+{% load geojson_tags %}
+{% block extra_assets %}
+  {% leaflet_js %}
+  {% leaflet_css %}
+{% endblock %}
 
 <!DOCTYPE html>
 <html>
@@ -89,15 +94,19 @@
         </div>
 
         <div class="col-xs-9">
-        {% leaflet_map "mymapp"%}
+        {% leaflet_map "osmmap" callback="loadmapfunction"%}
         </div>
-    </div>
-
-    <div class="container">
-    {% block main%}
-    {% endblock %}
-    </div>
 
     </div>
+
+    <script type="text/javascript">
+        var nodedata = '{% url "data" %}';
+        function loadmapfunction(map, options){
+            $.getJSON(nodedata, function(data){
+              L.geoJson(data).addTo(map);
+            })
+        }
+    </script>
+
     </body>
 </html>

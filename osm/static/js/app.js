@@ -1,4 +1,5 @@
 $(document).ready(function(){
+  
   var longs,lats;
   $("#query").on("click",function(){
 

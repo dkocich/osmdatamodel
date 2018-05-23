@@ -5,7 +5,6 @@ from decimal import Decimal
 from django.contrib.gis.geos import Point
 from ordered_set import OrderedSet
 from xml.dom import minidom
-
 def home(request):
     return render(request, 'osm/home.html')
 
@@ -58,10 +57,59 @@ def get_stops(request):
     print(OrderedSet(bus_nodes))
     print(OrderedSet(tram_nodes))
 
-    return render(request,'osm/stops.html')
+    return render(request,'osm/home.html')
 
 def get_route_master_relations(request):
 
+    route_master_key   = KeyValueString.objects.get(value='type')
+    route_master_value = KeyValueString.objects.get(value='route_master')
+    route_master_tag    = Tag.objects.get(key=route_master_key, value=route_master_value)
+    route_master_relations = route_master_tag.osm_relation_set.all()
+
+    bus_route_master  = []
+    rail_route_master = []
+
+    for route_master_relation in route_master_relations:
+        type_key = KeyValueString.objects.get(value='route_master')
+        tags = route_master_relation.tags.get(key=type_key)
+
+        if tags.value.value == 'bus':
+            print(tags.value)
+            bus_route_master.append(route_master_relation)
+        elif tags.value.value == 'light_rail':
+            rail_route_master.append(route_master_relation)
+    
+    print(OrderedSet(bus_route_master))
+    print(OrderedSet(rail_route_master))
+
+    return render(request, 'osm/home.html')
+
+def get_route_relations(request):
+
+    route_key   = KeyValueString.objects.get(value='type')
+    route_value = KeyValueString.objects.get(value='route')
+    route_tag    = Tag.objects.get(key=route_key, value=route_value)
+    route_relations = route_tag.osm_relation_set.all()
+
+    bus_route  = []
+    rail_route = []
+
+    for route_relation in route_relations:
+        type_key = KeyValueString.objects.get(value='route')
+        tags = route_relation.tags.get(key=type_key)
+
+        if tags.value.value == 'bus':
+            print(tags.value)
+            bus_route.append(route_relation)
+        elif tags.value.value == 'light_rail':
+            rail_route.append(route_relation)
+    
+    print(OrderedSet(bus_route))
+    print(OrderedSet(rail_route))
+
+    return render(request, 'osm/home.html')
+
+def load(request):
     osmFile = '''
     <osm version='0.6' generator='JOSM'>
       <node id='313586' timestamp='2018-01-15T17:26:05Z' uid='72151' user='GeorgFausB' version='13' changeset='55469382' lat='50.9558026' lon='6.9691347'>
@@ -93,74 +141,8 @@ def get_route_master_relations(request):
 
      </osm>
     '''
-
     root = etree.fromstring(osmFile)
 
-    route_master_key   = KeyValueString.objects.get(value='type')
-    route_master_value = KeyValueString.objects.get(value='route_master')
-    route_master_tag    = Tag.objects.get(key=route_master_key, value=route_master_value)
-    route_master_relations = route_master_tag.osm_relation_set.all()
-
-    bus_route_master  = []
-    rail_route_master = []
-
-    for route_master_relation in route_master_relations:
-        type_key = KeyValueString.objects.get(value='route_master')
-        tags = route_master_relation.tags.get(key=type_key)
-
-        if tags.value.value == 'bus':
-            print(tags.value)
-            bus_route_master.append(route_master_relation)
-        elif tags.value.value == 'light_rail':
-            rail_route_master.append(route_master_relation)
-    
-    print(OrderedSet(bus_route_master))
-    print(OrderedSet(rail_route_master))
-
-    return render(request, 'osm/route_masters.html')
-
-def get_route_relations(request):
-
-    route_key   = KeyValueString.objects.get(value='type')
-    route_value = KeyValueString.objects.get(value='route')
-    route_tag    = Tag.objects.get(key=route_key, value=route_value)
-    route_relations = route_tag.osm_relation_set.all()
-
-    bus_route  = []
-    rail_route = []
-
-    for route_relation in route_relations:
-        type_key = KeyValueString.objects.get(value='route')
-        tags = route_relation.tags.get(key=type_key)
-
-        if tags.value.value == 'bus':
-            print(tags.value)
-            bus_route.append(route_relation)
-        elif tags.value.value == 'light_rail':
-            rail_route.append(route_relation)
-    
-    print(OrderedSet(bus_route))
-    print(OrderedSet(rail_route))
-
-    return render(request, 'osm/routes.html')
-
-def load(request):
-    
-    osmFile = '''
-        <?xml version='1.0' encoding='UTF-8'?>
-        <osm version='0.6' generator='JOSM'>
-          <node id='313586' timestamp='2018-01-15T17:26:05Z' uid='72151' user='GeorgFausB' version='13' changeset='55469382' lat='50.9558026' lon='6.9691347'>
-            <tag k='TMC:cid_58:tabcd_1:Class' v='Point' />
-            <tag k='TMC:cid_58:tabcd_1:Direction' v='positive' />
-            <tag k='TMC:cid_58:tabcd_1:LCLversion' v='9.00' />
-            <tag k='TMC:cid_58:tabcd_1:LocationCode' v='39623' />
-            <tag k='TMC:cid_58:tabcd_1:NextLocationCode' v='39624' />
-            <tag k='TMC:cid_58:tabcd_1:PrevLocationCode' v='39622' />
-          </node>
-        </osm>
-    '''
-
-    root = etree.fromstring(osmFile)
     for primitive in root.getchildren():
         if primitive.tag == "node":
             #create tag
